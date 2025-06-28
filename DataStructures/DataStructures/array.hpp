@@ -248,8 +248,13 @@ namespace data_structures
 	template<class T>
 	inline void Array<T>::Length(const size_t& length)
 	{
-		return nullptr;
+		//if same length?
+		//if smaller
+		//if larger
+		//deep copy values to *newly allocated array
+		//clean up old storage_ if needed
 	}
+
 	template<class T>
 	inline T* Array<T>::AllocateArray(const size_t& length)
 	{
