@@ -24,6 +24,7 @@ namespace data_structures
 
 		Array(const Array& copy);
 		Array& operator=(const Array& rhs);
+
 		Array(Array&& copy) noexcept;
 		Array& operator=(Array&& rhs) noexcept;
 
@@ -67,43 +68,36 @@ namespace data_structures
 		delete[] storage_;
 		storage_ = nullptr;
 	}
+
 	template<class T>
 	inline Array<T>::Array(size_t length) : length_(length)
 	{
-		T* storage = nullptr;
-		try
-		{
-			storage = new T[length]{};
-		}
-		catch (const std::bad_alloc& ex)
-		{
-			delete[] storage;
-			storage = nullptr;
-			throw AdtException(ex.what());
-		}
-		storage_ = storage;
+
 	}
 
 	template<class T>
-	inline Array<T>::Array(const T* storage, const size_t& length) : length_(length)
+	inline Array<T>::Array(const T* storage, const size_t& length)
 	{
 		T* storage = nullptr;
 		try
 		{
 			storage = new T[length]{};
 		}
-		catch (const std::bad_alloc& ex)
+		catch
 		{
-			delete[] storage;
+			delete[] stroage;
 			storage = nullptr;
 			throw AdtException(ex.what());
 		}
+
 		storage_ = storage;
 
-		for (auto i = 0ull; i < length; ++i) {
+		for (auto i = 0ull; i < length; ++i)
+		{
 			storage_[i] = storage[i];
 		}
 	}
+
 	template<class T>
 	inline Array<T>::Array(const Array& copy)
 	{
@@ -113,153 +107,109 @@ namespace data_structures
 	template<class T>
 	inline Array& Array<T>::operator=(const Array& rhs)
 	{
-		//myarray = someOtherArray
-		if (this != &rhs)
-		{
-			T* new_storage = AllocateArray(rhs.length_);
-
-			for (auto i = 0ull; i < rhs.length_; ++i)
-			{
-				new_storage[i] = rhs.storage_[i];
-			}
-			//Delete old storage and update the members
-			delete[] storage_;
-			storage_ = new_storage;
-			length_ = rhs.length_;
-		}
-
+		// TODO: insert return statement here
 	}
 	template<class T>
-	inline Array<T>::Array(Array&& copy) noexcept : storage_(copy.storage_), length_(copy.length_)
+	inline Array<T>::Array(Array&& copy) noexcept
 	{
-		copy.storage_ = nullptr;
-		copy.length_ = 0;
 	}
 	template<class T>
 	inline Array& Array<T>::operator=(Array&& rhs) noexcept
 	{
-		if (this != &rhs)
-		{
-			delete[] storage_;
-			storage_ = nullptr;
-
-			storage_ = rhs.storage_;
-			length + rhs.length_;
-
-			rhs.storage_ = nullptr;
-			rhs.length_ = 0;
-		}
+		// TODO: insert return statement here
 	}
 	template<class T>
 	inline T& Array<T>::operator[](const size_t& index)
 	{
-		if (index >= length_)
-			throw AdtException(what: "Outside the bounds of the array");
-
-		return storage_[index];
+		// TODO: insert return statement here
 	}
-
 	template<class T>
 	inline const T& Array<T>::operator[](const size_t& index) const
 	{
-		if (index >= length_)
-			throw AdtException(what: "Outside the bounds of the array");
-
-		return storage_[index];
+		// TODO: insert return statement here
 	}
-
 	template<class T>
 	inline Array<T>::operator bool() const noexcept
 	{
-		//if (array) {do something}
-		//return (length_ != 0);
-		return storage_ != nullptr;
 	}
-
 	template<class T>
 	inline bool Array<T>::operator==(const Array& rhs) const noexcept
 	{
-		if (length_ == rhs.length_)
-		{
-			for (auto i 0ull; i < length_; ++i)
-			{
-				if (storage_[i] != rhs.storage_[i])
-					return false;
-			}
-			return true;
-		}
 		return false;
 	}
-
 	template<class T>
 	inline bool Array<T>::operator!=(const Array& rhs) const noexcept
 	{
-		return !(*this == rhs);
+		return false;
 	}
-
 	template<class T>
 	inline size_t Array<T>::size() const noexcept
 	{
-		return length_;
+		return size_t();
 	}
-
 	template<class T>
 	inline bool Array<T>::empty() const noexcept
 	{
-		return length_ == 0;
+		return false;
 	}
-
 	template<class T>
 	inline void Array<T>::resize(size_t newSize)
 	{
-		Length(newSize);
 	}
-
 	template<class T>
 	inline void Array<T>::clear()
 	{
-		delete[] storage_;
-		storage_ = nullptr;
-		length_ = 0;
 	}
 	template<class T>
-	typename Array<T>::iterator Array<T>::begin() noexcept
+	inline iterator Array<T>::begin() noexcept
 	{
-		return storage_;
+		return iterator();
 	}
 	template<class T>
-	typename Array<T>::const_iterator Array<T>::cbegin() const noexcept
+	inline const_iterator Array<T>::begin() const noexcept
 	{
-		return storage_;
+		return const_iterator();
 	}
-
 	template<class T>
-	typename Array<T>::iterator Array<T>::end() noexcept
+	inline const_iterator Array<T>::cbegin() const noexcept
 	{
-		return storage_ + length_;
+		return const_iterator();
 	}
-
 	template<class T>
-	typename Array<T>::const_iterator Array<T>::cend() const noexcept
+	inline iterator Array<T>::end() noexcept
 	{
-		return storage_ + length_;
+		return iterator();
 	}
-
+	template<class T>
+	inline const_iterator Array<T>::end() const noexcept
+	{
+		return const_iterator();
+	}
+	template<class T>
+	inline const_iterator Array<T>::cend() const noexcept
+	{
+		return const_iterator();
+	}
 	template<class T>
 	inline void Array<T>::Length(const size_t& length)
 	{
-		//if same length?
-		//if smaller
-		//if larger
-		//deep copy values to *newly allocated array
-		//clean up old storage_ if needed
 	}
-
 	template<class T>
 	inline T* Array<T>::AllocateArray(const size_t& length)
 	{
-		return nullptr;
+		T* storage = nullptr;
+		try
+		{
+			storage = new T[length]{};
+		}
+		catch
+		{
+			delete[] stroage;
+			storage = nullptr;
+			throw AdtException(ex.what());
+		}
+
+		return storage;
 	}
 }
-
 #endif
