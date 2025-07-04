@@ -198,46 +198,65 @@ namespace data_structures
 	template<class T>
 	inline void Array<T>::resize(size_t newSize)
 	{
+		Length(newSize);
 	}
 
 	template<class T>
 	inline void Array<T>::clear()
 	{
+		delete[] storage_;
+		storage_ = nullptr;
+		length_ = 0;
 	}
+
 	template<class T>
-	inline iterator Array<T>::begin() noexcept
+	typename Array<T>::iterator Array<T>::begin() noexcept
 	{
-		return iterator();
+		return storage_;
 	}
 	template<class T>
-	inline const_iterator Array<T>::begin() const noexcept
+	typename Array<T>::const_iterator Array<T>::begin() const noexcept
 	{
-		return const_iterator();
+		return storage_;
 	}
 	template<class T>
-	inline const_iterator Array<T>::cbegin() const noexcept
+	typename Array<T>::const_iterator Array<T>::cbegin() const noexcept
 	{
-		return const_iterator();
+		return storage_;
 	}
 	template<class T>
-	inline iterator Array<T>::end() noexcept
+	typename Array<T>::iterator Array<T>::end() noexcept
 	{
-		return iterator();
+		return storage_ + length_;
 	}
 	template<class T>
-	inline const_iterator Array<T>::end() const noexcept
+	typename Array<T>::const_iterator Array<T>::end() const noexcept
 	{
-		return const_iterator();
+		return storage_ + length_;
 	}
 	template<class T>
-	inline const_iterator Array<T>::cend() const noexcept
+	typename Array<T>::const_iterator Array<T>::cend() const noexcept
 	{
 		return const_iterator();
 	}
 	template<class T>
 	inline void Array<T>::Length(const size_t& length)
 	{
+		if !(length = length_)
+		{
+			T* newData = new T[length];
+
+			size_t minLength = (length < length_) ? length : length_;
+			for (size_t i = 0; i < minLength; ++i)
+				newData[i] = data_[i];
+
+			delete[] data_;
+			data_ newData;
+			length_ = length;
+		}
+		return;
 	}
+
 	template<class T>
 	inline T* Array<T>::AllocateArray(const size_t& length)
 	{
