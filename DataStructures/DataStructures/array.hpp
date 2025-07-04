@@ -93,7 +93,7 @@ namespace data_structures
 	}
 
 	template<class T>
-	inline Array& Array<T>::operator=(const Array& rhs)
+	Array<T>& Array<T>::operator=(const Array& rhs)
 	{
 		// myarray = someotherarray
 		if (this!=&rhs)
@@ -102,7 +102,7 @@ namespace data_structures
 
 			for (auto i = 0ull; i < rhs.length_; ++i)
 			{
-				new storage[i] = rhs.storage_[i];
+				new_storage[i] = rhs.storage_[i];
 			}
 			delete[] storage_;
 			storage_ = new_storage;
@@ -242,19 +242,18 @@ namespace data_structures
 	template<class T>
 	inline void Array<T>::Length(const size_t& length)
 	{
-		if !(length = length_)
+		if (length != length_)
 		{
-			T* newData = new T[length];
+			T* newData = AllocateArray(length); 
 
 			size_t minLength = (length < length_) ? length : length_;
 			for (size_t i = 0; i < minLength; ++i)
-				newData[i] = data_[i];
+				newData[i] = storage_[i];
 
-			delete[] data_;
-			data_ newData;
+			delete[] storage_;
+			storage_ = newData;
 			length_ = length;
 		}
-		return;
 	}
 
 	template<class T>
@@ -265,9 +264,9 @@ namespace data_structures
 		{
 			storage = new T[length]{};
 		}
-		catch
+		catch (const std::exception& ex)
 		{
-			delete[] stroage;
+			delete[] storage;
 			storage = nullptr;
 			throw AdtException(ex.what());
 		}
