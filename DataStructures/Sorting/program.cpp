@@ -67,7 +67,7 @@ void RunSortForSizeN(const size_t numbers_to_sort[], const size_t& size)
 	
 	for(auto& my_array_sort: my_array_sorts)
 	{
-		const auto sort_time = my_array_sort->Sort(my_array, my_array.Length());
+		const auto sort_time = my_array_sort->Sort(my_array, my_array.size());
 
 		cout << std::setw(20) << my_array_sort->SortName() << ": " << std::setw(10) << std::right << sort_time << std::endl;
 

@@ -63,31 +63,31 @@ namespace data_structures
 		T* AllocateArray(const size_t& length);
 	};
 	template<class T>
-	inline Array<T>::~Array()
+	Array<T>::~Array()
 	{
 		delete[] storage_;
 		storage_ = nullptr;
 	}
 
 	template<class T>
-	inline Array<T>::Array(size_t length) : length_(length)
+	Array<T>::Array(size_t length) : length_(length)
 	{
 		storage_ = AllocateArray(length);
 	}
 
 	template<class T>
-	inline Array<T>::Array(const T* storage, const size_t& length)
+	Array<T>::Array(const T* storage, const size_t& length) : length_(length)
 	{
 		storage_ = AllocateArray(length);
 
-		for (auto i = 0ull; i < length; ++i)
+		for (auto i = 0ull; i<length; ++i)
 		{
 			storage_[i] = storage[i];
 		}
 	}
 
 	template<class T>
-	inline Array<T>::Array(const Array& copy)
+	Array<T>::Array(const Array& copy)
 	{
 		*this = copy;
 	}
@@ -163,13 +163,13 @@ namespace data_structures
 	}
 
 	template<class T>
-	inline bool Array<T>::operator==(const Array& rhs) const noexcept
+	bool Array<T>::operator==(const Array& rhs) const noexcept
 	{
 		if (length_ == rhs.length_)
 		{
 			for (auto i = 0ull; i < length_; ++i)
 			{
-				if (storage_[i] == rhs.storage_[i])
+				if (storage_[i] != rhs.storage_[i])
 					return false;
 			}
 			return true;
@@ -257,14 +257,14 @@ namespace data_structures
 	}
 
 	template<class T>
-	inline T* Array<T>::AllocateArray(const size_t& length)
+	T* Array<T>::AllocateArray(const size_t& length)
 	{
 		T* storage = nullptr;
 		try
 		{
 			storage = new T[length]{};
 		}
-		catch (const std::exception& ex)
+		catch (const std::bad_alloc& ex)
 		{
 			delete[] storage;
 			storage = nullptr;
