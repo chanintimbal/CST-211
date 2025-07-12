@@ -138,5 +138,19 @@ namespace data_structures_tests
 			Assert::AreEqual(1, stack.Pop());
 		}
 
+		TEST_METHOD(TestCapacityReturnsActualArraySize)
+		{
+			const CrtCheckMemory check;
+
+			ArrayStack<int> stack(3);
+			stack.Push(1);
+			stack.Push(2);
+			Assert::AreEqual(2ull, stack.Size());
+			stack.Pop();
+			Assert::AreEqual(1ull, stack.Size());
+			stack.Push(3);
+			Assert::AreEqual(2ull, stack.Size());
+		}
+
 	};
 }
