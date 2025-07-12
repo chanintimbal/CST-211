@@ -116,5 +116,27 @@ namespace data_structures_tests
 			stack.Clear();
 			Assert::AreEqual(0ull, stack.Size());
 		}
+
+		TEST_METHOD(TestPeekDoesNotRemoveElement)
+		{
+			const CrtCheckMemory check;
+
+			ArrayStack<int> stack(3);
+			stack.Push(99);
+			Assert::AreEqual(99, stack.Peek());
+			Assert::AreEqual(1ull, stack.Size());
+		}
+
+		TEST_METHOD(TestPopReturnsLastElement)
+		{
+			const CrtCheckMemory check;
+
+			ArrayStack<int> stack(3);
+			stack.Push(1);
+			stack.Push(2);
+			Assert::AreEqual(2, stack.Pop());
+			Assert::AreEqual(1, stack.Pop());
+		}
+
 	};
 }
