@@ -48,5 +48,23 @@ namespace data_structures_tests
 			}
 
 		}
+
+		TEST_METHOD(TestPopOnEmptyStackThrows)
+		{
+			const CrtCheckMemory check;
+
+			ArrayStack<int> stack(1);
+
+			Assert::ExpectException<AdtException>([&]() { stack.Pop();  });
+		}
+
+		TEST_METHOD(TestPeekOnEmptyStackThrows)
+		{
+			const CrtCheckMemory check;
+
+			ArrayStack<int> stack(1);
+
+			Assert::ExpectException<AdtException>([&]() { int temp = stack.Peek();  });
+		}
 	};
 }
