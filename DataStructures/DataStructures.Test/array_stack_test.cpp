@@ -93,5 +93,28 @@ namespace data_structures_tests
 			Assert::IsFalse(stack.IsFull());
 
 		}
+
+		TEST_METHOD(SizeShouldReturnCorrectNumberOfElementsInStack)
+		{
+			const CrtCheckMemory check;
+
+			auto stack = ArrayStackintFactory();
+
+			for (auto i = 10ull; i > 0; i--)
+			{
+				Assert::AreEqual(i, stack.Size());
+				stack.Pop();
+			}
+			
+		}
+
+		TEST_METHOD(ClearShouldSetSizeToZero)
+		{
+			const CrtCheckMemory check;
+
+			auto stack = ArrayStackintFactory();
+			stack.Clear();
+			Assert::AreEqual(0ull, stack.Size());
+		}
 	};
 }
