@@ -48,5 +48,109 @@ namespace data_structures_tests
 			}
 
 		}
+
+		TEST_METHOD(TestPopOnEmptyStackThrows)
+		{
+			const CrtCheckMemory check;
+
+			ArrayStack<int> stack(1);
+
+			Assert::ExpectException<AdtException>([&]() { stack.Pop();  });
+		}
+
+		TEST_METHOD(TestPeekOnEmptyStackThrows)
+		{
+			const CrtCheckMemory check;
+
+			ArrayStack<int> stack(1);
+
+			Assert::ExpectException<AdtException>([&]() { int temp = stack.Peek();  });
+		}
+
+		TEST_METHOD(TestIsEmpty_Sunny)
+		{
+			const CrtCheckMemory check;
+
+			ArrayStack<int> stack(2);
+
+			Assert::IsTrue(stack.IsEmpty());
+
+			stack.Push(42);
+
+			Assert::IsFalse(stack.IsEmpty());
+		}
+
+		TEST_METHOD(TestIsFull_Sunny)
+		{
+			const CrtCheckMemory check;
+
+			ArrayStack<int> stack = ArrayStackintFactory();
+
+			Assert::IsTrue(stack.IsFull());
+
+			stack.Pop();
+
+			Assert::IsFalse(stack.IsFull());
+
+		}
+
+		TEST_METHOD(SizeShouldReturnCorrectNumberOfElementsInStack)
+		{
+			const CrtCheckMemory check;
+
+			auto stack = ArrayStackintFactory();
+
+			for (auto i = 10ull; i > 0; i--)
+			{
+				Assert::AreEqual(i, stack.Size());
+				stack.Pop();
+			}
+			
+		}
+
+		TEST_METHOD(ClearShouldSetSizeToZero)
+		{
+			const CrtCheckMemory check;
+
+			auto stack = ArrayStackintFactory();
+			stack.Clear();
+			Assert::AreEqual(0ull, stack.Size());
+		}
+
+		TEST_METHOD(TestPeekDoesNotRemoveElement)
+		{
+			const CrtCheckMemory check;
+
+			ArrayStack<int> stack(3);
+			stack.Push(99);
+			Assert::AreEqual(99, stack.Peek());
+			Assert::AreEqual(1ull, stack.Size());
+		}
+
+		TEST_METHOD(TestPopReturnsLastElement)
+		{
+			const CrtCheckMemory check;
+
+			ArrayStack<int> stack(3);
+			stack.Push(1);
+			stack.Push(2);
+			Assert::AreEqual(2, stack.Pop());
+			Assert::AreEqual(1, stack.Pop());
+		}
+
+		TEST_METHOD(TestCapacityReturnsActualArraySize)
+		{
+			const CrtCheckMemory check;
+
+			ArrayStack<int> stack(3);
+			stack.Push(1);
+			stack.Push(2);
+			Assert::AreEqual(2ull, stack.Size());
+			stack.Pop();
+			Assert::AreEqual(1ull, stack.Size());
+			stack.Push(3);
+			Assert::AreEqual(2ull, stack.Size());
+		}
+
 	};
 }

@@ -113,7 +113,7 @@ namespace data_structures
 	template <typename T>
 	bool ArrayStack<T>::IsFull() const noexcept
 	{
-		return stack_.size() == SIZE_MAX;
+		return (top_ == stack_.size());
 	}
 
 	template <typename T>
@@ -125,7 +125,7 @@ namespace data_structures
 	template <typename T>
 	bool ArrayStack<T>::IsEmpty() const noexcept
 	{
-		return stack_.size() == 0;
+		return top_ == 0;
 	}
 
 	template <typename T>
