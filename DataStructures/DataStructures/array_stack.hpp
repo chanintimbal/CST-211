@@ -56,6 +56,7 @@ namespace data_structures
 		//stack = stack2
 		if (this != &rhs)
 		{
+			Clear();
 			stack_ = rhs.stack_;
 			top_ = rhs.top_;
 		}
@@ -73,6 +74,7 @@ namespace data_structures
 	{
 		if (this != &rhs)
 		{
+			Clear();
 			top_ = rhs.top_;
 			stack_ = std::move(rhs.stack_);
 		}
