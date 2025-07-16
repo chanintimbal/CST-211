@@ -89,8 +89,8 @@ namespace data_structures
 		if (IsFull())
 			throw AdtException("Queue is Full.");
 
-		queue_[back_] = data;
-		back_++;
+		queue_[back_] = std::move(data);
+		back_ = (back_ + 1) % queue_.size();
 		count_++;
 		
 	}
@@ -102,7 +102,8 @@ namespace data_structures
 			throw AdtException("Queue is empty");
 
 		auto temp = queue_[front_];
-		front_++;
+		queue_[front_] = T();
+		front_ = (front_ + 1) % queue_.size();
 		count_--;
 		return temp;
 	}
@@ -125,6 +126,9 @@ namespace data_structures
 	template <typename T>
 	void ArrayQueue<T>::Clear() noexcept
 	{
+		for (size_t i = 0; i < queue_.size(); ++i)
+			queue_[i] = T();
+
 		front_ = 0;
 		count_ = 0;
 		back_ = 0;

@@ -1,6 +1,9 @@
 #include "pch.h"
 #include "CppUnitTest.h"
 #include "array_queue.hpp"
+
+#include <Windows.h>
+
 #include "crt_check_memory.hpp"
 
 using namespace data_structures;
@@ -103,6 +106,33 @@ namespace data_structures_tests
 
 			Assert::ExpectException<AdtException>([&] { queue.Dequeue(); });
 
+		}
+
+		TEST_METHOD(Enqueue_Dequeue_AreCircular_SunnyAndRainy)
+		{
+			const CrtCheckMemory check;
+
+			ArrayQueue<int> queue(5);
+
+			queue.Enqueue(0);
+			queue.Enqueue(1);
+			queue.Enqueue(2);
+			queue.Enqueue(3);
+			queue.Enqueue(4);
+		
+			queue.Dequeue(); //zero comes off of front, front moves to 1
+			Assert::AreEqual(1, queue.Dequeue());
+
+			queue.Enqueue(5);
+			queue.Enqueue(6);
+
+			Assert::AreEqual(2, queue.Dequeue());
+			Assert::AreEqual(3, queue.Dequeue());
+			Assert::AreEqual(4, queue.Dequeue());
+			Assert::AreEqual(5, queue.Dequeue());
+			Assert::AreEqual(6, queue.Dequeue());
+
+			Assert::IsTrue(queue.IsEmpty());
 		}
 	};
 }
