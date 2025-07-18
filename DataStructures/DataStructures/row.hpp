@@ -21,8 +21,7 @@ namespace data_structures
 
 	template <class T>
 	Row<T>::Row(const IArray2D<T>& arr, size_t row_index)
-		:arr_(arr), row_(row_index) {
-	}
+		:arr_(arr), row_(row_index) {}
 
 	template <class T>
 	T Row<T>::operator[](size_t column) const
