@@ -6,6 +6,7 @@
 #include <thread>
 #include <chrono>
 #include <random>
+#include <unordered_set>
 
 using namespace data_structures;
 
@@ -19,12 +20,16 @@ public:
     int countNeighbors(size_t row, size_t column) const;
     void updateGeneration();
     void seedRandom(double probability);
+    bool allCellsDead() const;
+    bool generationsRepeat();
+    std::string serializeBoard(const Array2D<bool>& board, size_t rows, size_t columns);
 
 private:
     Array2D<bool> gameBoard;
     Array2D<bool> nextGen;
     size_t rows;
     size_t columns;
+    std::unordered_set <std::string> previousGenerations;
 };
 
 
@@ -118,17 +123,102 @@ void GameOfLife::seedRandom(double probability)
     }
 }
 
+bool GameOfLife::allCellsDead() const
+{
+    for (size_t i = 0; i < rows; ++i)
+        for (size_t j = 0; j < columns; ++j)
+            if (gameBoard[i][j])
+                return false;  // Found a live cell
+    return true; 
+}
+
+bool GameOfLife::generationsRepeat()
+{
+    std::string currentState = serializeBoard(gameBoard, rows, columns);
+
+    if (previousGenerations.find(currentState) != previousGenerations.end())
+        return true; // Repeat found
+
+    previousGenerations.insert(currentState);
+    return false;
+}
+
+std::string GameOfLife::serializeBoard(const Array2D<bool>& board, size_t rows, size_t columns)
+{
+    std::string result;
+    result.reserve(rows * columns);
+
+    for (size_t i = 0; i < rows; ++i)
+        for (size_t j = 0; j < columns; ++j)
+            result += (board[i][j] ? '1' : '0');
+
+    return result;
+
+}
+
 void GameOfLife::run() {
-    seedRandom(0.5);
+    int numGens;
+    double probability;
+    char restart = 'y';
 
-    for (int i = 0; i < 10; ++i)
+    while (restart == 'y')
     {
-        displayArray();
-        updateGeneration();
+        std::cout << "Enter number of generations to simulate: ";
+        std::cin >> numGens;
+        while (numGens > 50 || numGens < 0)
+        {
+            std::cout << "Please enter a number between 1 and 50\n";
+            std::cin >> numGens;
+        }
+        std::cout << "Enter probability of alive cells: ";
+        std::cin >> probability;
+        while (probability > 1.0 || probability <= 0.0)
+        {
+            std::cout << "Please enter a number between 0.0 and 1.0\n";
+            std::cin >> probability;
+        }
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(500));
-        system("CLS");
+        seedRandom(probability);
+
+        for (int i = 0; i < numGens; ++i)
+        {
+            displayArray();
+
+
+
+            if (allCellsDead())
+            {
+                std::cout << "All Cells are Dead! Press Enter key to exit.";
+                std::cin.ignore(100, '\n');
+                std::cin.get();
+                break;
+            }
+
+            if (generationsRepeat())
+            {
+                std::cout << "Generation repeated! (Colony is stable) Press Enter key to exit.";
+                std::cin.ignore(100, '\n');
+                std::cin.get();
+                break;
+            }
+
+            updateGeneration();
+
+            std::this_thread::sleep_for(std::chrono::milliseconds(500));
+            system("CLS");
+
+            if (i == numGens - 1)
+                std::cout << numGens << " generations ran.\n\n";
+        }
+        std::cout << "Would you like to run another simulation?(y/n) : ";
+        std::cin >> restart;
+        while (restart != 'y' && restart != 'n')
+        {
+            std::cout << "Please enter y to restart or n to exit\n";
+            std::cin >> restart;
+        }
     }
+    
 }
 
 #endif
