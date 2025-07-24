@@ -5,7 +5,7 @@ using namespace data_structures;
 
 int main()
 {
-	GameOfLife game(10, 10);
+	GameOfLife game(50, 50);
 	game.run();
 
 	return 0;

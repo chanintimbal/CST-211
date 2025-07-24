@@ -184,8 +184,6 @@ void GameOfLife::run() {
         {
             displayArray();
 
-
-
             if (allCellsDead())
             {
                 std::cout << "All Cells are Dead! Press Enter key to exit.";
@@ -210,6 +208,8 @@ void GameOfLife::run() {
             if (i == numGens - 1)
                 std::cout << numGens << " generations ran.\n\n";
         }
+
+        displayArray();
         std::cout << "Would you like to run another simulation?(y/n) : ";
         std::cin >> restart;
         while (restart != 'y' && restart != 'n')
