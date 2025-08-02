@@ -348,73 +348,73 @@ namespace data_structures
 	template <class T>
 	typename LinkedList<T>::iterator LinkedList<T>::begin()
 	{
-		return iterator(head_);
+		return iterator(head_, tail_, true);
 	}
 
 	template <class T>
 	typename LinkedList<T>::iterator LinkedList<T>::end()
 	{
-		return iterator(nullptr);
+		return iterator(nullptr, tail_, true);
 	}
 
 	template <class T>
 	typename LinkedList<T>::const_iterator LinkedList<T>::begin() const
 	{
-		return const_iterator(head_);
+		return const_iterator(head_, tail_, true);
 	}
 
 	template <class T>
 	typename LinkedList<T>::const_iterator LinkedList<T>::end() const
 	{
-		return const_iterator(nullptr);
+		return const_iterator(nullptr, tail_, true);
 	}
 
 	template <class T>
 	typename LinkedList<T>::const_iterator LinkedList<T>::cbegin() const
 	{
-		return const_iterator(head_);
+		return const_iterator(head_, tail_, true);
 	}
 
 	template <class T>
 	typename LinkedList<T>::const_iterator LinkedList<T>::cend() const
 	{
-		return const_iterator(nullptr);
+		return const_iterator(nullptr, tail_, true);
 	}
 
 	template <class T>
 	typename LinkedList<T>::iterator LinkedList<T>::rbegin()
 	{
-		return iterator(tail_, true);
+		return iterator(tail_, head_, false);
 	}
 
 	template <class T>
 	typename LinkedList<T>::iterator LinkedList<T>::rend()
 	{
-		return iterator(nullptr, true);
+		return iterator(nullptr, head_, false);
 	}
 
 	template <class T>
 	typename LinkedList<T>::const_iterator LinkedList<T>::rbegin() const
 	{
-		return const_iterator(tail_, true);
+		return const_iterator(tail_, head_, false);
 	}
 
 	template <class T>
 	typename LinkedList<T>::const_iterator LinkedList<T>::rend() const
 	{
-		return const_iterator(nullptr, true);
+		return const_iterator(nullptr, head_, false);
 	}
 
 	template <class T>
 	typename LinkedList<T>::const_iterator LinkedList<T>::crbegin() const
 	{
-		return const_iterator(tail_, true);
+		return const_iterator(tail_, head_, false);
 	}
 
 	template <class T>
 	typename LinkedList<T>::const_iterator LinkedList<T>::crend() const
 	{
-		return const_iterator(nullptr, true);
+		return const_iterator(nullptr, head_, false);
 	}
 
 	template <class T>
