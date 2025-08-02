@@ -5,9 +5,14 @@
 
 namespace data_structures
 {
+	template <typename T>
+	class ListIterator;
+
 	template <class T>
 	class ListNode final : public Node<T>
 	{
+		friend class ListIterator<T>;
+
 	public:
 		ListNode() = delete;
 		explicit ListNode(const T& data, ListNode* next = nullptr, ListNode* previous = nullptr);

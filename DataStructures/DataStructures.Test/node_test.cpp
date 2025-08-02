@@ -8,7 +8,7 @@ using namespace data_structures;
 
 namespace data_structures_tests
 {
-	TEST_CLASS(ListQueueTest)
+	TEST_CLASS(NodeTest)
 	{
 	public:
 

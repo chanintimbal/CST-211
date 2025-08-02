@@ -11,7 +11,6 @@ namespace data_structures
     class ListIterator : public IAdtIterator<T>
     {
     public:
-        //iterator traits so STL algorithms recognise us
         using typename IAdtIterator<T>::iterator_category;
         using typename IAdtIterator<T>::value_type;
         using typename IAdtIterator<T>::reference;
@@ -20,51 +19,89 @@ namespace data_structures
         using typename IAdtIterator<T>::const_reference;
         using typename IAdtIterator<T>::const_pointer;
 
-        //ctors / assignment (all defaultable)
         ListIterator() noexcept = default;
-        explicit ListIterator(ListNode<T>* start, ListNode<T>* tail, bool forward = true) noexcept;
+        explicit ListIterator(ListNode<T>* start, ListNode<T>* tail, bool forward = true) noexcept
+            : current_(start), tail_(tail), forward_(forward) {}
+
         ListIterator(const ListIterator&) noexcept = default;
         ListIterator(ListIterator&&) noexcept = default;
         ListIterator& operator=(const ListIterator&) noexcept = default;
         ListIterator& operator=(ListIterator&&) noexcept = default;
         ~ListIterator() override = default;
 
-        //convenience
-        explicit operator bool() const noexcept;
-        bool AtEnd() const noexcept;
+        explicit operator bool() const noexcept { return current_ != nullptr; }
+        bool AtEnd() const noexcept { return current_ == nullptr; }
 
-        //IIterator interface*/
-        reference Value();
-        const_reference Value() const;
+        reference Value() { Check(); return current_->Value(); }
+        const_reference Value() const { Check(); return current_->Value(); }
 
-        //STL-style dereference
-        reference operator*() override;
-        const_reference operator*() const override;
+        reference operator*() override { return Value(); }
+        const_reference operator*() const override { return Value(); }
 
-        pointer operator->() override;
-        const_pointer operator->() const override;
+        pointer operator->() override { Check(); return &(current_->Value()); }
+        const_pointer operator->() const override { Check(); return &(current_->Value()); }
 
-        //Bi-Directional Navigation
-        ListIterator& operator++() override;          // prefix ++
-        ListIterator operator++(int);       // postfix ++
-        ListIterator& operator--() override;          // prefix --
-        ListIterator operator--(int);       // postfix --
+        ListIterator& operator++() override
+        {
+            Check();
+            current_ = forward_ ? current_->Next() : current_->Prev();
+            return *this;
+        }
 
-        //Compare
-        bool operator==(const IAdtIterator<T>& o) const override;
-        bool operator!=(const IAdtIterator<T>& o) const override;
+        ListIterator operator++(int)
+        {
+            ListIterator tmp = *this;
+            ++(*this);
+            return tmp;
+        }
 
-        //Resetting to list head (walk prev links)
-        void Reset() noexcept;
+        ListIterator& operator--() override
+        {
+            if (!current_)
+                current_ = tail_;
+            else
+                current_ = forward_ ? current_->Prev() : current_->Next();
+            return *this;
+        }
+
+        ListIterator operator--(int)
+        {
+            ListIterator tmp = *this;
+            --(*this);
+            return tmp;
+        }
+
+        bool operator==(const IAdtIterator<T>& o) const override
+        {
+            auto* other = dynamic_cast<const ListIterator*>(&o);
+            return other && current_ == other->current_;
+        }
+
+        bool operator!=(const IAdtIterator<T>& o) const override
+        {
+            return !(*this == o);
+        }
+
+        void Reset() noexcept
+        {
+            current_ = forward_ ? tail_ : nullptr;
+            while (current_ && (forward_ ? current_->Prev() : current_->Next()))
+            {
+                current_ = forward_ ? current_->Prev() : current_->Next();
+            }
+        }
 
     private:
-        ListNode<T>* current_{ nullptr }; // nullptr == end()
-        ListNode<T>* tail_{ nullptr }; // nullptr == end()
-        bool forward_{ true };      // true: begin()/end(), false: rbegin()/rend()
-        void Check() const;         // throw if AtEnd()
+        ListNode<T>* current_{ nullptr };
+        ListNode<T>* tail_{ nullptr };
+        bool forward_{ true };
+
+        void Check() const
+        {
+            if (!current_)
+                throw AdtException("Iterator out of bounds.");
+        }
     };
-
-
 }
 
-#endif 
+#endif
