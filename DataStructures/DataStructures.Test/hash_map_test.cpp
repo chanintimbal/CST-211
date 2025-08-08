@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "CppUnitTest.h"
 #include "adt_exception.hpp"
-#include "hash_map.hpp"  // your hashmap header
+#include "hash_map.hpp"  
 #include "crt_check_memory.hpp"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
