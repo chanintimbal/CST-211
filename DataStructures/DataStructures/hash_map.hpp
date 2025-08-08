@@ -93,8 +93,7 @@ namespace data_structures
 	}
 
 	template <class TKey, class TValue>
-	HashMap<TKey, TValue>::HashMap(HashMap&& rhs) noexcept
-		: buckets_(std::move(rhs.buckets_)), hash_function_(std::move(rhs.hash_function_)), count_(rhs.count_)
+	HashMap<TKey, TValue>::HashMap(HashMap&& rhs) noexcept : buckets_(std::move(rhs.buckets_)), hash_function_(std::move(rhs.hash_function_)), count_(rhs.count_)
 	{
 		rhs.count_ = 0;
 	}
@@ -115,28 +114,28 @@ namespace data_structures
 	template <class TKey, class TValue>
 	void HashMap<TKey, TValue>::EnsureCapacity(size_t minBuckets, bool trim)
 	{
-		if (buckets_.Size() >= minBuckets && !trim)
+		if (minBuckets <= buckets_.size() && !trim)
 			return;
 
-		Array<LinkedList<KVPair>> newBuckets(minBuckets);
+		size_t newSize = minBuckets > buckets_.size() ? minBuckets : buckets_.size();
+		Array<LinkedList<KVPair>> newBuckets(newSize);
 
 		for (auto& bucket : buckets_)
 		{
 			for (auto& pair : bucket)
 			{
-				size_t newIndex = hash_function_(pair.First()) % minBuckets;
-				newBuckets[newIndex].PushBack(move(pair));
+				size_t newIndex = hash_function_(pair.First()) % newSize;
+				newBuckets[newIndex].Append(pair);
 			}
 		}
 
-		buckets_ = move(newBuckets);
+		buckets_ = std::move(newBuckets);
 	}
 
 	template <class TKey, class TValue>
 	void HashMap<TKey, TValue>::TrimExcess()
 	{
-		size_t newSize = count_ > 0 ? count_ : 1;
-		EnsureCapacity(newSize, true);
+		EnsureCapacity(count_, true);
 	}
 
 	template <class TKey, class TValue>
@@ -145,11 +144,11 @@ namespace data_structures
 		if (ContainsKey(key))
 			return false;
 
-		if (count_ >= buckets_.Size())
-			EnsureCapacity(buckets_.Size() * 2 + 1);
+		if (count_ >= buckets_.size())
+			EnsureCapacity(buckets_.size() * 2 + 1);
 
 		size_t index = BucketIndex(key);
-		buckets_[index].PushBack(KVPair(key, value));
+		buckets_[index].Append(KVPair(key, value));
 		++count_;
 		return true;
 	}
@@ -157,48 +156,51 @@ namespace data_structures
 	template <class TKey, class TValue>
 	void HashMap<TKey, TValue>::Put(const TKey& key, const TValue& value)
 	{
-		KVPair* pair = FindPair(key);
-		if (pair)
-		{
-			pair->Second(value);
-		}
-		else
-		{
-			if (count_ >= buckets_.Size())
-				EnsureCapacity(buckets_.Size() * 2 + 1);
+		if (count_ >= buckets_.size())
+			EnsureCapacity(buckets_.size() * 2 + 1);
 
-			size_t index = BucketIndex(key);
-			buckets_[index].PushBack(KVPair(key, value));
-			++count_;
+		size_t index = BucketIndex(key);
+		for (auto& pair : buckets_[index])
+		{
+			if (pair.First() == key)
+			{
+				pair.Second(value);
+				return;
+			}
 		}
+
+		buckets_[index].Append(KVPair(key, value));
+		++count_;
 	}
 
 	template <class TKey, class TValue>
 	TValue& HashMap<TKey, TValue>::operator[](const TKey& key)
 	{
-		KVPair* pair = FindPair(key);
-		if (pair)
-			return pair->Second();
-
-		if (count_ >= buckets_.Size())
-			EnsureCapacity(buckets_.Size() * 2 + 1);
-
 		size_t index = BucketIndex(key);
-		buckets_[index].PushBack(KVPair(key, TValue{}));
+		for (auto& pair : buckets_[index])
+		{
+			if (pair.First() == key)
+				return pair.Second();
+		}
+
+		if (count_ >= buckets_.size())
+			EnsureCapacity(buckets_.size() * 2 + 1);
+
+		index = BucketIndex(key);
+		buckets_[index].Append(KVPair(key, TValue{}));
 		++count_;
-		return buckets_[index].Back().Second();
+		return buckets_[index].Last().Second();
 	}
 
 	template <class TKey, class TValue>
 	bool HashMap<TKey, TValue>::TryGetValue(const TKey& key, TValue& outVal) const
 	{
 		const KVPair* pair = FindPair(key);
-		if (pair)
-		{
-			outVal = pair->Second();
-			return true;
-		}
-		return false;
+		if (!pair)
+			return false;
+
+		outVal = pair->Second();
+		return true;
 	}
 
 	template <class TKey, class TValue>
@@ -206,7 +208,7 @@ namespace data_structures
 	{
 		const KVPair* pair = FindPair(key);
 		if (!pair)
-			throw adt_exception("Key not found");
+			throw AdtException("Key not found");
 		return pair->Second();
 	}
 
@@ -214,18 +216,20 @@ namespace data_structures
 	bool HashMap<TKey, TValue>::Remove(const TKey& key, TValue* removed)
 	{
 		size_t index = BucketIndex(key);
-		auto& list = buckets_[index];
-		for (auto it = list.begin(); it != list.end(); ++it)
+		auto& bucket = buckets_[index];
+
+		for (auto it = bucket.begin(); it != bucket.end(); ++it)
 		{
 			if (it->First() == key)
 			{
 				if (removed)
 					*removed = it->Second();
-				list.Erase(it);
+				bucket.Remove(*it);
 				--count_;
 				return true;
 			}
 		}
+
 		return false;
 	}
 
@@ -260,47 +264,52 @@ namespace data_structures
 	{
 		for (auto& bucket : buckets_)
 			bucket.Clear();
+
 		count_ = 0;
 	}
 
 	template <class TKey, class TValue>
 	size_t HashMap<TKey, TValue>::TableSize() const noexcept
 	{
-		return buckets_.Size();
+		return buckets_.size();
 	}
 
 	template <class TKey, class TValue>
 	auto HashMap<TKey, TValue>::begin()
 	{
-		return buckets_.begin();
+		// Could be implemented for iteration over all elements if desired
+		throw AdtException("Not implemented");
 	}
 
 	template <class TKey, class TValue>
 	auto HashMap<TKey, TValue>::end()
 	{
-		return buckets_.end();
+		throw AdtException("Not implemented");
 	}
 
 	template <class TKey, class TValue>
 	auto HashMap<TKey, TValue>::begin() const
 	{
-		return buckets_.begin();
+		throw AdtException("Not implemented");
 	}
 
 	template <class TKey, class TValue>
 	auto HashMap<TKey, TValue>::end() const
 	{
-		return buckets_.end();
+		throw AdtException("Not implemented");
 	}
 
 	template <class TKey, class TValue>
 	Array<TKey> HashMap<TKey, TValue>::Keys() const
 	{
 		Array<TKey> keys(count_);
+		size_t i = 0;
 		for (const auto& bucket : buckets_)
 		{
 			for (const auto& pair : bucket)
-				keys.PushBack(pair.First());
+			{
+				keys[i++] = pair.First();
+			}
 		}
 		return keys;
 	}
@@ -309,10 +318,13 @@ namespace data_structures
 	Array<TValue> HashMap<TKey, TValue>::Values() const
 	{
 		Array<TValue> values(count_);
+		size_t i = 0;
 		for (const auto& bucket : buckets_)
 		{
 			for (const auto& pair : bucket)
-				values.PushBack(pair.Second());
+			{
+				values[i++] = pair.Second();
+			}
 		}
 		return values;
 	}
@@ -320,9 +332,7 @@ namespace data_structures
 	template <class TKey, class TValue>
 	size_t HashMap<TKey, TValue>::BucketIndex(const TKey& key) const noexcept
 	{
-		if (buckets_.Size() == 0)
-			return 0;
-		return hash_function_(key) % buckets_.Size();
+		return hash_function_(key) % buckets_.size();
 	}
 
 	template <class TKey, class TValue>
@@ -349,4 +359,5 @@ namespace data_structures
 		return nullptr;
 	}
 }
+
 #endif
