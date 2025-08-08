@@ -79,6 +79,7 @@ namespace data_structures_tests
 			const CrtCheckMemory check;
 
 			auto hashFn = [](const int& key) { return std::hash<int>{}(key); };
+
 			HashMap<int, std::string> map(3, hashFn);
 
 			map.Put(1, "one");
