@@ -28,5 +28,29 @@ namespace data_structures
 		PairNode() = default;
 		K key_{};
 	};
+
+	template <class K, class V>
+	PairNode<K, V>::PairNode(const K& key, const V& value)
+		: Node<V>(value), key_(key)
+	{
+	}
+
+	template <class K, class V>
+	K& PairNode<K, V>::Key() noexcept
+	{
+		return key_;
+	}
+
+	template <class K, class V>
+	const K& PairNode<K, V>::Key() const noexcept
+	{
+		return key_;
+	}
+
+	template <class K, class V>
+	void PairNode<K, V>::Key(const K& key)
+	{
+		key_ = key;
+	}
 }
 #endif

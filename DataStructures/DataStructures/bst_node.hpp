@@ -37,6 +37,66 @@ namespace data_structures
 		BstNode* left_{ nullptr };
 		BstNode* right_{ nullptr };
 		BstNode* parent_{ nullptr };
-	};	
+	};
+
+	template <class K, class V>
+	BstNode<K, V>::BstNode(const K& key, const V& value, BstNode* left, BstNode* right)
+		: PairNode<K, V>(key, value), left_(left), right_(right)
+	{
+	}
+
+	template <class K, class V>
+	BstNode<K, V>*& BstNode<K, V>::Left() noexcept
+	{
+		return left_;
+	}
+
+	template <class K, class V>
+	BstNode<K, V>*& BstNode<K, V>::Right() noexcept
+	{
+		return right_;
+	}
+
+	template <class K, class V>
+	BstNode<K, V>*& BstNode<K, V>::Parent() noexcept
+	{
+		return parent_;
+	}
+
+	template <class K, class V>
+	BstNode<K, V>* const& BstNode<K, V>::Left() const noexcept
+	{
+		return left_;
+	}
+
+	template <class K, class V>
+	BstNode<K, V>* const& BstNode<K, V>::Right() const noexcept
+	{
+		return right_;
+	}
+
+	template <class K, class V>
+	BstNode<K, V>* const& BstNode<K, V>::Parent() const noexcept
+	{
+		return parent_;
+	}
+
+	template <class K, class V>
+	void BstNode<K, V>::Left(BstNode* left) noexcept
+	{
+		left_ = left;
+	}
+
+	template <class K, class V>
+	void BstNode<K, V>::Right(BstNode* right) noexcept
+	{
+		right_ = right;
+	}
+
+	template <class K, class V>
+	void BstNode<K, V>::Parent(BstNode* parent) noexcept
+	{
+		parent_ = parent;
+	}
 }
 #endif
