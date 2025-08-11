@@ -64,81 +64,111 @@ namespace data_structures
     template <class K, class V>
     AvlTree<K, V>::~AvlTree()
     {
+        this->Clear();
     }
 
     template <class K, class V>
     AvlTree<K, V>::AvlTree(const AvlTree& copy)
     {
+        this->Copy(copy.Root());
     }
 
     template <class K, class V>
     AvlTree<K, V>& AvlTree<K, V>::operator=(const AvlTree& rhs)
     {
+        if (this != &rhs)
+        {
+            this->Clear();
+            this->Copy();
+        }
+        return *this;
     }
 
     template <class K, class V>
     AvlTree<K, V>::AvlTree(AvlTree&& copy) noexcept
     {
+        this->Root() = copy.Root();
+        copy.Root() = nullptr;
     }
 
     template <class K, class V>
     AvlTree<K, V>& AvlTree<K, V>::operator=(AvlTree&& rhs) noexcept
     {
+        if (this != &rhs)
+        {
+            this->Clear();
+            this->Root() = rhs.Root();
+            rhs.Root() = nullptr;
+        }
+        return *this;
     }
 
     template <class K, class V>
     V& AvlTree<K, V>::operator[](const K& key)
     {
+        return Base::insert(key, V{}).first;
     }
 
     template <class K, class V>
     std::pair<V&, bool> AvlTree<K, V>::InsertImpl(const K& key, const V& value)
     {
+        bool taller = false;
+        return Insesrt(this->Root(), key, value, taller);
     }
 
     template <class K, class V>
     void AvlTree<K, V>::RemoveImpl(const K& key)
     {
+        bool shorter = false;
+        this->Root() = Remove(this->Root(), key, shorter);
     }
 
     template <class K, class V>
     typename AvlTree<K, V>::iterator AvlTree<K, V>::begin() noexcept
     {
+        return iterator(this->MinNode(this->Root()));
     }
 
     template <class K, class V>
     typename AvlTree<K, V>::iterator AvlTree<K, V>::end() noexcept
     {
+        return iterator(static_cast<Node*>(nullptr));
     }
 
     template <class K, class V>
     typename AvlTree<K, V>::const_iterator AvlTree<K, V>::begin() const noexcept
     {
+        return cbegin();
     }
 
     template <class K, class V>
     typename AvlTree<K, V>::const_iterator AvlTree<K, V>::end() const noexcept
     {
+        return cend();
     }
 
     template <class K, class V>
     typename AvlTree<K, V>::const_iterator AvlTree<K, V>::cbegin() const noexcept
     {
+        return iterator(this->MinNode(this->Root()));
     }
 
     template <class K, class V>
     typename AvlTree<K, V>::const_iterator AvlTree<K, V>::cend() const noexcept
     {
+        return iterator(static_cast<Node*>(nullptr));
     }
 
     template <class K, class V>
     std::pair<V&, bool> AvlTree<K, V>::Insert(Node*& node, const K& key, const V& value, bool& taller)
     {
+        return { V{}, false };
     }
 
     template <class K, class V>
     typename AvlTree<K, V>::Node* AvlTree<K, V>::Remove(Node* node, const K& key, bool& shorter)
     {
+        return nullptr;
     }
 
     template <class K, class V>
@@ -164,11 +194,32 @@ namespace data_structures
     template <class K, class V>
     typename AvlTree<K, V>::Node* AvlTree<K, V>::RotateLeft(Node* node)
     {
+        Node* right = node->Right();
+        node->Right(right->Left());
+        if (right->Left())
+            right->Left()->Parent(node); //Sets parent
+        right->Left(node);
+
+        right->Parent(node->Parent()); //new subtree root takes original parent
+        node->Parent(right);
+
+        return right;
     }
 
     template <class K, class V>
     typename AvlTree<K, V>::Node* AvlTree<K, V>::RotateRight(Node* node)
     {
+        Node* left = node->Left();
+        node->Left(left->RIght());
+
+        if (left->Right())
+            left->Right()->Parent(node);
+        left->Right(node);
+
+        left->Parent(node->Parent());
+        node->Parent(left);
+
+        return left;
     }
 }
 
