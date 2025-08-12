@@ -56,7 +56,7 @@ namespace data_structures
 
 	template <class K, class V>
 	AvlNode<K, V>::AvlNode(const K& key, const V& value, AvlNode* left, AvlNode* right)
-		: PairNode<k, v>(key, value), left_(left), right_(right)
+		: PairNode<K, V>(key, value), left_(left), right_(right)
 	{	}
 
 	template <class K, class V>
@@ -71,7 +71,7 @@ namespace data_structures
 		{
 			PairNode<K, V>::operator=(rhs);
 			left_ = rhs.left;
-			right_ = rhs.left;
+			right_ = rhs.right;
 			parent_ = rhs.parent_;
 			balance_factor_ = rhs.balance_factor_;
 		}
@@ -95,7 +95,7 @@ namespace data_structures
 		{
 			PairNode<K, V>::operator=(std::move(rhs));
 			left_ = rhs.left;
-			right_ = rhs.left;
+			right_ = rhs.right;
 			parent_ = rhs.parent;
 			balance_factor_ = rhs.balance_factor_;
 
@@ -135,13 +135,18 @@ namespace data_structures
 	void AvlNode<K, V>::Left(AvlNode* left) noexcept
 	{
 		left_ = left;
+		if (left_)
+			left_->Parent(this);
 	}
 
 	template <class K, class V>
 	void AvlNode<K, V>::Right(AvlNode* right) noexcept
 	{
 		right_ = right;
+		if (right_)
+			right_->Parent(this);
 	}
+
 
 	template <class K, class V>
 	AvlNodeBalanceFactor AvlNode<K, V>::BalanceFactor() const noexcept
