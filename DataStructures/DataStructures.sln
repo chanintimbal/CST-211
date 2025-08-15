@@ -13,6 +13,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LyricsCompressor", "LyricsC
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sorting", "Sorting\Sorting.vcxproj", "{86821110-3125-400F-A4EE-2810D3572BAE}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UndoRedo", "UndoRedo\UndoRedo.vcxproj", "{CE2F7AB0-EA79-4B77-9F3A-A7E55D54AD69}"
+	ProjectSection(ProjectDependencies) = postProject
+		{142950E9-449C-4767-B40E-F71EE6593DF3} = {142950E9-449C-4767-B40E-F71EE6593DF3}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -61,8 +66,19 @@ Global
 		{86821110-3125-400F-A4EE-2810D3572BAE}.Release|x64.Build.0 = Release|x64
 		{86821110-3125-400F-A4EE-2810D3572BAE}.Release|x86.ActiveCfg = Release|Win32
 		{86821110-3125-400F-A4EE-2810D3572BAE}.Release|x86.Build.0 = Release|Win32
+		{CE2F7AB0-EA79-4B77-9F3A-A7E55D54AD69}.Debug|x64.ActiveCfg = Debug|x64
+		{CE2F7AB0-EA79-4B77-9F3A-A7E55D54AD69}.Debug|x64.Build.0 = Debug|x64
+		{CE2F7AB0-EA79-4B77-9F3A-A7E55D54AD69}.Debug|x86.ActiveCfg = Debug|Win32
+		{CE2F7AB0-EA79-4B77-9F3A-A7E55D54AD69}.Debug|x86.Build.0 = Debug|Win32
+		{CE2F7AB0-EA79-4B77-9F3A-A7E55D54AD69}.Release|x64.ActiveCfg = Release|x64
+		{CE2F7AB0-EA79-4B77-9F3A-A7E55D54AD69}.Release|x64.Build.0 = Release|x64
+		{CE2F7AB0-EA79-4B77-9F3A-A7E55D54AD69}.Release|x86.ActiveCfg = Release|Win32
+		{CE2F7AB0-EA79-4B77-9F3A-A7E55D54AD69}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6D6A72D7-CF5E-4C1D-BA69-EFA785BEBF51}
 	EndGlobalSection
 EndGlobal
