@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="UndoRedo.cpp">
+    <ClCompile Include="UndoRedo.hpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
