@@ -1,3 +1,4 @@
+/*
 #include "hash_map.hpp"
 #include "menu.hpp"
 #include "file_reader.hpp"
@@ -133,8 +134,10 @@ void run()
     }
 }
 
+*/
+
 int main()
 {
-	run();
+	//run();
 	return 0;
 }
